@@ -1,4 +1,4 @@
-package ir.mapsa.autocharge_module.externa_services;
+package ir.mapsa.autochargemodule.externalservices;
 
 import lombok.Getter;
 import lombok.Setter;

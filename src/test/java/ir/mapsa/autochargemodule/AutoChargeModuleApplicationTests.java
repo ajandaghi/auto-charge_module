@@ -1,4 +1,4 @@
-package ir.mapsa.autocharge_module;
+package ir.mapsa.autochargemodule;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
