@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 public class MessagingConfig {
 
     public static final String QUEUE = "wallet_queue";
-    public static final String EXCHANGE = "javatechie_exchange";
-    public static final String ROUTING_KEY = "javatechie_routingKey";
+//    public static final String EXCHANGE = "javatechie_exchange";
+//    public static final String ROUTING_KEY = "javatechie_routingKey";
 
     @Bean
     public ConnectionFactory connectionFactory() {
@@ -32,15 +32,15 @@ public class MessagingConfig {
         return new Queue(QUEUE);
     }
 
-    @Bean
-    public TopicExchange exchange() {
-        return new TopicExchange(EXCHANGE);
-    }
+//    @Bean
+//    public TopicExchange exchange() {
+//        return new TopicExchange(EXCHANGE);
+//    }
 
-    @Bean
-    public Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
-    }
+//    @Bean
+//    public Binding binding(Queue queue, TopicExchange exchange) {
+//        return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
+//    }
 
     @Bean
     public MessageConverter converter() {
