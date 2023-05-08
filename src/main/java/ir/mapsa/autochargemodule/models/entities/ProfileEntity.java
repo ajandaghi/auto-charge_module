@@ -1,7 +1,6 @@
 package ir.mapsa.autochargemodule.models.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 
 @Entity
