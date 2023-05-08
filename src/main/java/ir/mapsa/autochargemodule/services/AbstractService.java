@@ -7,7 +7,8 @@ import org.springframework.data.domain.Example;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractService<R extends BaseRepository<E, Long>, E> {
+
+public abstract class AbstractService<R extends BaseRepository<E, String>, E> {
     @Autowired
     protected R repository;
 
@@ -21,12 +22,12 @@ public abstract class AbstractService<R extends BaseRepository<E, Long>, E> {
     }
 
 
-    public void deleteById(Long id) throws Exception {
-        repository.deleteById(id);
+    public void deleteById(String walletId) throws Exception {
+        repository.deleteById(walletId);
     }
 
-    public Optional<E> findById(Long id) throws Exception {
-        return repository.findById(id);
+    public Optional<E> findById(String walletId) throws Exception {
+        return repository.findById(walletId);
     }
 
     public List<E> getAll() throws Exception {
