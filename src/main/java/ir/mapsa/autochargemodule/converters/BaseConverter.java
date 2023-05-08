@@ -28,6 +28,4 @@ public interface BaseConverter<E,D> {
         }
         return null;
     }
-
-
 }
