@@ -19,11 +19,11 @@ public class BalanceInquiry {
 
     private final RestTemplate restTemplate=new RestTemplate();
 
-    public BalanceResponse checkBalance(String walletId) throws JSONException {
+    public WalletResponse checkBalance(String walletId) throws JSONException {
    //ResponseEntity<BalanceResponse>
         JSONObject object=new JSONObject();
         object.put("walletId",walletId);
         HttpEntity<JSONObject> request=new HttpEntity<>(object);
-       return restTemplate.postForEntity(balanceInquiryUrl,request,BalanceResponse.class).getBody();
+       return restTemplate.postForEntity(balanceInquiryUrl,request, WalletResponse.class).getBody();
     }
 }

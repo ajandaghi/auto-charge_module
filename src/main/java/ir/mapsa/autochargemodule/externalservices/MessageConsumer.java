@@ -1,7 +1,5 @@
 package ir.mapsa.autochargemodule.externalservices;
 
-import ir.mapsa.autochargemodule.rabbitmqconfiguration.MessagingConfig;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 @Service

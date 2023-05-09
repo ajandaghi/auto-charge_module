@@ -1,6 +1,5 @@
-package ir.mapsa.autochargemodule.rabbitmqconfiguration;
+package ir.mapsa.autochargemodule.configuration;
 
-import com.rabbitmq.client.*;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
