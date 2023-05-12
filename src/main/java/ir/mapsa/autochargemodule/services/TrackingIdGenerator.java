@@ -6,7 +6,7 @@ import java.util.UUID;
 
 @Service
 public class TrackingIdGenerator {
-    public String generateID() {
+    public static String generateID() {
         return UUID.randomUUID().toString();
     }
 }

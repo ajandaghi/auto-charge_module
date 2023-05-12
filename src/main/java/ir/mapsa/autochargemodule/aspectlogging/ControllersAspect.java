@@ -10,6 +10,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -18,8 +20,8 @@ import java.io.StringWriter;
 @Slf4j
 public class ControllersAspect {
 
-    @Autowired
-    private HttpServletRequest request;
+//    @Autowired
+//    private HttpServletRequest request;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -27,13 +29,13 @@ public class ControllersAspect {
     @Autowired
     LogModelRepository logModelRepository;
 
-    @Before("within(ir.mapsa.autochargemodule.controllers.AbstractController+ )")
-    public void before() {
-
-        log.info("request coming from " + request.getServerName() + " AND iP is => " + request.getLocalAddr() + " AND CALL URL =>  " + request.getRequestURI());
-
-
-    }
+//    @Before("within(ir.mapsa.autochargemodule.controllers.AbstractController+ )")
+//    public void before() {
+//        RequestContextHolder.getRequestAttributes().
+//        log.info("request coming from " + request.getServerName() + " AND iP is => " + request.getLocalAddr() + " AND CALL URL =>  " + request.getRequestURI());
+//
+//
+//    }
 
 
     @Around("within(ir.mapsa.autochargemodule.controllers.AbstractController+ )")

@@ -1,9 +1,6 @@
 package ir.mapsa.autochargemodule.models.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
 
@@ -15,6 +12,7 @@ import org.hibernate.envers.Audited;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransactionEntity extends AbstractEntity{
+    @Column(unique = true)
     private String trackingId;
 
     private Long amount;

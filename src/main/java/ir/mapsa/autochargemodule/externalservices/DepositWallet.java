@@ -1,13 +1,10 @@
 package ir.mapsa.autochargemodule.externalservices;
 
 import ir.mapsa.autochargemodule.converters.TransactionConverter;
-import ir.mapsa.autochargemodule.models.dtos.AbstractDto;
 import ir.mapsa.autochargemodule.models.dtos.TransactionDto;
-import ir.mapsa.autochargemodule.models.entities.TransactionEntity;
 import ir.mapsa.autochargemodule.models.entities.TransactionStatus;
 import ir.mapsa.autochargemodule.services.TrackingIdGenerator;
 import ir.mapsa.autochargemodule.services.TransactionService;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +22,7 @@ public class DepositWallet {
     TrackingIdGenerator trackingIdGenerator;
 
     @Autowired
-    WalletResponse walletResponse;
+    RestResponse restResponse;
 
     @Autowired
     TransactionService transactionService;
@@ -46,20 +43,20 @@ public class DepositWallet {
         object.put("walletId", walletId);
         object.put("amount", amount);
         HttpEntity<JSONObject> request = new HttpEntity<>(object);
-        walletResponse=restTemplate.postForEntity(walletDepositUrl, request, WalletResponse.class).getBody();
+        restResponse =restTemplate.postForEntity(walletDepositUrl, request, RestResponse.class).getBody();
 
-        if(walletResponse==null) {
+        if(restResponse ==null) {
             throw new RuntimeException("Null Response");
         }
         TransactionDto transactionDto=TransactionDto.builder()
-                .status(walletResponse.getStatus())
+                .status(restResponse.getStatus())
                 .amount(amount)
                 .trackingId(trackingId).build();
         transactionDto.setWalletId(walletId);
         transactionService.add(transactionConverter.convertDto(transactionDto));
 
 
-          if(walletResponse.getStatus().equals(TransactionStatus.FAILED)){
+          if(restResponse.getStatus().equals(TransactionStatus.FAILED)){
               Thread.sleep(7000);
               failedTransactionInquiry.checkFailedTransactions(trackingId,transactionDto);
          }

@@ -3,15 +3,12 @@ package ir.mapsa.autochargemodule.externalservices;
 import ir.mapsa.autochargemodule.converters.TransactionConverter;
 import ir.mapsa.autochargemodule.models.dtos.TransactionDto;
 import ir.mapsa.autochargemodule.models.entities.TransactionStatus;
-import ir.mapsa.autochargemodule.repositories.TransactionRepository;
 import ir.mapsa.autochargemodule.services.TransactionService;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,7 +19,7 @@ public class FailedTransactionInquiry {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
-    WalletResponse walletResponse;
+    RestResponse restResponse;
     @Value("${failed.inquiry.url}")
     private String failedInquiryUrl;
 
@@ -39,9 +36,9 @@ public class FailedTransactionInquiry {
         object.put("trackingId", trackingId);
         HttpEntity<JSONObject> request = new HttpEntity<>(object);
 
-        walletResponse= restTemplate.postForEntity(failedInquiryUrl, request, WalletResponse.class).getBody();
+        restResponse = restTemplate.postForEntity(failedInquiryUrl, request, RestResponse.class).getBody();
 
-        if(walletResponse!=null && walletResponse.getStatus().equals(TransactionStatus.SUCCEEDED)){
+        if(restResponse !=null && restResponse.getStatus().equals(TransactionStatus.SUCCEEDED)){
             transactionService.update(transactionConverter.convertDto(transactionDto));
         }
     }
