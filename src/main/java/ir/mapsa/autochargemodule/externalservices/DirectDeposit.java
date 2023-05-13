@@ -2,7 +2,6 @@ package ir.mapsa.autochargemodule.externalservices;
 
 import ir.mapsa.autochargemodule.models.entities.TransactionStatus;
 import ir.mapsa.autochargemodule.services.TrackingIdGenerator;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +19,7 @@ public class DirectDeposit
     RestResponse restResponse;
 
     @Autowired
-    DepositWallet depositWallet;
+    DepositWalletService depositWallet;
 
     @Value("${bank.directDebit.url}")
     private String bankDirectDebitUrl;
