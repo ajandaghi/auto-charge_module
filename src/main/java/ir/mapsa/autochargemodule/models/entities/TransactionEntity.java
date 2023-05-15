@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
 
+import java.util.Date;
+
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Audited
@@ -19,4 +21,6 @@ public class TransactionEntity extends AbstractEntity{
 
     @Enumerated(value = EnumType.STRING)
     private TransactionStatus status;
+
+    private Date date;
 }

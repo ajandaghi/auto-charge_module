@@ -22,12 +22,12 @@ public abstract class AbstractService<R extends BaseRepository<E, String>, E> {
     }
 
 
-    public void deleteById(String walletId) throws Exception {
-        repository.deleteById(walletId);
+    public void deleteById(String user) throws Exception {
+        repository.deleteById(user);
     }
 
-    public Optional<E> findById(String walletId) throws Exception {
-        return repository.findById(walletId);
+    public Optional<E> findById(String user) throws Exception {
+        return repository.findById(user);
     }
 
     public List<E> getAll() throws Exception {
