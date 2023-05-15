@@ -1,28 +1,26 @@
 package ir.mapsa.autochargemodule.services;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
 
-import static io.jsonwebtoken.SignatureAlgorithm.HS256;
-import static io.jsonwebtoken.SignatureAlgorithm.HS512;
-
 @Service
 public class ParserJwt {
-    private static String getAllClaimsFromToken(String token) {
+    public static JwtPayloadObj getAllFromToken(String token) throws JsonProcessingException {
         Base64.Decoder decoder = Base64.getUrlDecoder();
         String[] chunks = token.split("\\.");
 
         String header = new String(decoder.decode(chunks[0]));
         String payload = new String(decoder.decode(chunks[1]));
+        JwtPayloadObj jwtObj = new ObjectMapper().readValue(payload, JwtPayloadObj.class);
 
-        return  header;
+        return  jwtObj;
     }
 
-    public static void main(String[] args) {
-        System.out.println(getAllClaimsFromToken("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhcmVyem9vZWVvIiwiZXhwIjoxNjgzOTY3NjEyLCJpYXQiOjE2ODM5NjQ2MTJ9.wOf0dm7ui0dGZACX_5p0IsnzPEBQ4R2xjTZrdhxMgUkcHOSpb1By08YNwkCGtuJXgvySgQaUXvtV42zCD_RJEg"));
+    public static void main(String[] args) throws JsonProcessingException {
+        System.out.println(getAllFromToken("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhcmVyem9vZWVvIiwicm9sZSI6IlJPTEVfVVNFUiIsImFjY291bnROdW1iZXIiOiI2MzYyMTQxMDU2NzIzMDY1NTgiLCJleHAiOjE2ODQxNDQyNjYsImlhdCI6MTY4NDE0MDY2NiwiY2FyZE51bWJlciI6IjYzNjIxNDEwNTY3MjMwNjgiLCJqdGkiOiI0ZmJkYmI3NjU5ZmY0NTZmOTc5OGNjNmY5MTJmMGYzOCJ9.QqbvACVepYaaevxlDUrqaOwKVoEJcBu2omVh26aoFy4SJqwqZ7fVrx7dWcy7_naaocsMkFrrhMKxncQmDpOG4g"));
     }
 }
 
