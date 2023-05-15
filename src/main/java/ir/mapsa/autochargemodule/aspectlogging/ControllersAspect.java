@@ -38,40 +38,40 @@ public class ControllersAspect {
 //    }
 
 
-    @Around("within(ir.mapsa.autochargemodule.controllers.AbstractController+ )")
-    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-
-        LogModel logModel = new LogModel();
-        logModel.setMethodName(joinPoint.getSignature().getName());
-
-        logModel.setRequest(joinPoint.getArgs());
-
-        Object value;
-        try {
-            value = joinPoint.proceed();
-            if (value != null) {
-                logModel.setResponse(value);
-                return value;
-            }
-            logModelRepository.save(logModel);
-            log.info("Success req " + objectMapper.writeValueAsString(logModel));
-        } catch (Throwable e) {
-
-
-            StringWriter writer = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(writer);
-            e.printStackTrace(printWriter);
-            writer.close();
-            printWriter.close();
-            logModel.setErrorTrace(writer.toString());
-           logModelRepository.save(logModel);
-            log.error("Failure req " + objectMapper.writeValueAsString(logModel));
-            throw e;
-
-        }
-
-
-        return value;
-    }
+//    @Around("within(ir.mapsa.autochargemodule.controllers.AbstractController+ )")
+//    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+//
+////        LogModel logModel = new LogModel();
+////        logModel.setMethodName(joinPoint.getSignature().getName());
+////
+////        logModel.setRequest(joinPoint.getArgs());
+//
+//        Object value;
+//        try {
+//            value = joinPoint.proceed();
+//            if (value != null) {
+//                logModel.setResponse(value);
+//                return value;
+//            }
+//            logModelRepository.save(logModel);
+//            log.info("Success req " + objectMapper.writeValueAsString(logModel));
+//        } catch (Throwable e) {
+//
+//
+//            StringWriter writer = new StringWriter();
+//            PrintWriter printWriter = new PrintWriter(writer);
+//            e.printStackTrace(printWriter);
+//            writer.close();
+//            printWriter.close();
+//            logModel.setErrorTrace(writer.toString());
+//           logModelRepository.save(logModel);
+//            log.error("Failure req " + objectMapper.writeValueAsString(logModel));
+//            throw e;
+//
+//        }
+//
+//
+//        return value;
+//    }
 
 }

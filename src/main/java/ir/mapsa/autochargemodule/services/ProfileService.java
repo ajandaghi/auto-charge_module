@@ -7,5 +7,7 @@ import ir.mapsa.autochargemodule.repositories.ProfileRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProfileService extends AbstractService<BaseRepository<ProfileEntity,String>, ProfileEntity> {
+public class ProfileService extends AbstractService<ProfileRepository, ProfileEntity> {
+
+
 }

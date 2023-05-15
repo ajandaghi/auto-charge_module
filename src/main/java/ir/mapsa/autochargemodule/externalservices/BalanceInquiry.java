@@ -24,10 +24,10 @@ public class BalanceInquiry {
     private String balanceInquiryUrl;
 
     @Autowired
-    ProfileService profileService;
+    private ProfileService profileService;
 
     @Autowired
-    DirectDeposit directDeposit;
+    private DirectDeposit directDeposit;
 
 
 

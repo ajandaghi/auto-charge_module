@@ -6,4 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ProfileRepository extends BaseRepository<ProfileEntity,String>{
 
+
+
+
 }
