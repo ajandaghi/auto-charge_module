@@ -13,4 +13,5 @@ public class ProfileDto extends AbstractDto{
 
     private Long minimumBalance;
 
+
 }

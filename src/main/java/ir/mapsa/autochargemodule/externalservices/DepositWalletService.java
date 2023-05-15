@@ -24,16 +24,16 @@ public class DepositWalletService {
 
 
     @Autowired
-    RestResponse restResponse;
+    private RestResponse restResponse;
 
     @Autowired
-    TransactionService transactionService;
+    private TransactionService transactionService;
 
     @Autowired
-    TransactionConverter transactionConverter;
+    private TransactionConverter transactionConverter;
 
     @Autowired
-    FailedTransactionInquiry failedTransactionInquiry;
+    private FailedTransactionInquiry failedTransactionInquiry;
 
     @Value("${wallet.deposit.url}")
     private String walletDepositUrl;

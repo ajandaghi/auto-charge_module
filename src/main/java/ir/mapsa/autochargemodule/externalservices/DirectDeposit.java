@@ -16,10 +16,10 @@ public class DirectDeposit
 {
     private final RestTemplate restTemplate = new RestTemplate();
     @Autowired
-    RestResponse restResponse;
+    private RestResponse restResponse;
 
     @Autowired
-    DepositWalletService depositWallet;
+    private DepositWalletService depositWallet;
 
     @Value("${bank.directDebit.url}")
     private String bankDirectDebitUrl;

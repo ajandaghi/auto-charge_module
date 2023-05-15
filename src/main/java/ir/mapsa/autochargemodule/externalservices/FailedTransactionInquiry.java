@@ -19,7 +19,7 @@ public class FailedTransactionInquiry {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
-    RestResponse restResponse;
+    private RestResponse restResponse;
     @Value("${failed.inquiry.url}")
     private String failedInquiryUrl;
 
