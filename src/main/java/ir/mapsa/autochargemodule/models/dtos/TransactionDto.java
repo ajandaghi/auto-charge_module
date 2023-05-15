@@ -5,6 +5,8 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.*;
 
+import java.util.Date;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
@@ -16,4 +18,6 @@ public class TransactionDto extends AbstractDto{
     private Long amount;
 
     private TransactionStatus status;
+
+    private Date  date;
 }
