@@ -22,5 +22,5 @@ public class TransactionEntity extends AbstractEntity{
     @Enumerated(value = EnumType.STRING)
     private TransactionStatus status;
 
-    private Date date;
+    private Date transDate;
 }

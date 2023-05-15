@@ -8,5 +8,4 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface UserAuthorization {
     @GetMapping("/api/token/is-valid")
     UserValidation checkTokenValidity(@RequestHeader(name="Authorization") String token);
-
 }

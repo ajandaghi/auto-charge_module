@@ -2,12 +2,19 @@ package ir.mapsa.autochargemodule.repositories;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
 import ir.mapsa.autochargemodule.models.entities.TransactionEntity;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public interface TransactionRepository extends  BaseRepository<TransactionEntity,String> {
-    TransactionEntity findByDateBetweenAndUser(Date from, Date to, String user);
+
+//    @Query(value = "select * from transaction_entity where user=:user and trans_date between :from and :to",nativeQuery = true)
+//    List<TransactionEntity> findByDateBetweenAndUser(@Param("from") Date from, @Param("to") Date to,@Param("user") String user);
+
+    List<TransactionEntity> findByTransDateBetweenAndUser(Date from, Date to,String user);
 
 }
