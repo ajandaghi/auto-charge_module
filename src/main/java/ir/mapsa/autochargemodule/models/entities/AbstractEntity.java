@@ -17,7 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class AbstractEntity {
     @Id
-    private String walletId;
+    private String user;
 
     @Version
     private Integer version;

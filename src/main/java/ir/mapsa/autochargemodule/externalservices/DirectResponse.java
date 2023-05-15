@@ -5,8 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DepositWalletRequest {
-   private String token;
-   private Long amount;
-
+public class DirectResponse {
+    private String status;
 }

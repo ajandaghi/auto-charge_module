@@ -14,7 +14,7 @@ import java.util.Date;
 @EqualsAndHashCode
 public class AbstractDto {
 
-    private String walletId;
+    private String user;
 
 
     private Integer version;

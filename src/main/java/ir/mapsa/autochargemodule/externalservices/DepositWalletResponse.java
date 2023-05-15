@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Getter
 @Setter
 @Service
-public class RestResponse {
+public class DepositWalletResponse {
     private TransactionStatus status;
     private Long balance;
 }
