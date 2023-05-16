@@ -28,13 +28,7 @@ public class MessageConsumer
    // @RabbitListener(queues = MessagingConfig.QUEUE)
     public void consumeMessageFromQueue(Messages message) throws Exception {
         if(message.getDealType().equals(TransactionType.WITHDRAW)){
-            if(userAuthorizer.checkTokenValidity(message.getToken()).getIsValid()) {
                 balanceInquiry.checkBalance(new BalanceRequest(message.getToken()));
-            }else{
-                 throw new ServiceException(" Message with UnAuthorized token.");
-            }
-
-
         }
 
     }

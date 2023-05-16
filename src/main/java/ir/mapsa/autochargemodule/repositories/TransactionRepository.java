@@ -12,9 +12,9 @@ import java.util.List;
 @Service
 public interface TransactionRepository extends  BaseRepository<TransactionEntity,String> {
 
-//    @Query(value = "select * from transaction_entity where user=:user and trans_date between :from and :to",nativeQuery = true)
-//    List<TransactionEntity> findByDateBetweenAndUser(@Param("from") Date from, @Param("to") Date to,@Param("user") String user);
+//  @Query(value = "select * from transaction_entity where user=:user and trans_date between :from and :to",nativeQuery = true)
+//    List<TransactionEntity> findByTransDateBetweenAndUser(@Param("from") Date from, @Param("to") Date to,@Param("user") String user);
 
-    List<TransactionEntity> findByTransDateBetweenAndUser(Date from, Date to,String user);
+   List<TransactionEntity> findByTransDateAfterAndTransDateBeforeAndUser(Date from,Date after,String user);
 
 }

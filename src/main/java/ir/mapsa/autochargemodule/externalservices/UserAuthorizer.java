@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserAuthorizer {
 
     @Autowired
-    private UserAuthorization userAuthentication;
+    private UserAuthorization userAuthorization;
 
    @GetMapping("/check-validation")
     public UserValidation checkTokenValidity(@RequestHeader(name="Authorization") String token) {
-       return  userAuthentication.checkTokenValidity(token);
+       return  userAuthorization.checkTokenValidity(token);
    }
 }
