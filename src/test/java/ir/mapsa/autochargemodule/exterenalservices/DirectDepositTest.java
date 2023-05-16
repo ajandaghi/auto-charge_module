@@ -17,7 +17,7 @@ public class DirectDepositTest {
     @Mock
     private DepositWalletService depositWalletService;
     @InjectMocks
-    private DirectDeposit directDeposit;
+    private DirectDebit directDeposit;
     @Mock
     private RestTemplate restTemplate;
 
@@ -32,14 +32,14 @@ public class DirectDepositTest {
     public void testIfOk() throws Exception {
 
         HttpEntity<DirectRequest> request = new HttpEntity<>(directRequest);
-        when(restTemplate.postForEntity(bankDirectDebitUrl, request, DirectResponse.class).getBody().getStatus().equals("Ok")).thenReturn(true);
+        when(restTemplate.postForEntity(bankDirectDebitUrl, request, DirectResponse.class).getBody().getMessage().equals("Ok")).thenReturn(true);
 
     }
     @Test
     public void testIfNotOk() throws Exception {
 
         HttpEntity<DirectRequest> request = new HttpEntity<>(directRequest);
-        when(restTemplate.postForEntity(bankDirectDebitUrl, request, DirectResponse.class).getBody().getStatus().equals("false")).thenReturn(false);
+        when(restTemplate.postForEntity(bankDirectDebitUrl, request, DirectResponse.class).getBody().getMessage().equals("false")).thenReturn(false);
 
     }
 

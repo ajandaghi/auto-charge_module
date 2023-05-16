@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 public class DirectRequest {
     private String token;
-    private String accountNumber;
+    private String sourceAccountNumber;
+    private final String DestinationAccountNumber="1000000000";
     private Long amount;
 }

@@ -31,17 +31,12 @@ public class TimeoutTransactionAspect {
 
     @Autowired
     DepositWalletResponse restResponse;
-    @Value("${failed.inquiry.url}")
-    private String failedInquiryUrl;
+
+
+
 
     @Autowired
-    TransactionService transactionService;
-
-    @Autowired
-    TransactionConverter transactionConverter;
-
-    @Autowired
-    DepositWalletService depositWalletService;
+    private DepositWalletService depositWalletService;
 
 
 

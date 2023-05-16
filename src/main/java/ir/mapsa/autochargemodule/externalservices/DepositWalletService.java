@@ -8,13 +8,13 @@ import ir.mapsa.autochargemodule.models.entities.TransactionStatus;
 import ir.mapsa.autochargemodule.services.ParserJwt;
 import ir.mapsa.autochargemodule.services.TrackingIdGenerator;
 import ir.mapsa.autochargemodule.services.TransactionService;
-import jakarta.servlet.ServletException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -50,8 +50,9 @@ public class DepositWalletService {
         transactionDto.setUser(ParserJwt.getAllFromToken(depositWalletRequest.getToken()).getSub());
 
         try{
-            walletResponse =restTemplate.postForEntity(walletDepositUrl, request, DepositWalletResponse.class).getBody();
-            transactionDto.setStatus(walletResponse.getTrackingStatus());
+            ResponseEntity<DepositWalletResponse> walletResponse;
+            walletResponse=restTemplate.exchange(walletDepositUrl, HttpMethod.POST, request, DepositWalletResponse.class);
+            transactionDto.setStatus(walletResponse.getBody().getStatus());
 
         } catch (HttpServerErrorException | HttpClientErrorException e) {
 
@@ -71,8 +72,10 @@ public class DepositWalletService {
         HttpEntity<DepositWalletRequest> request = new HttpEntity<>(depositWalletRequest,headers);
         for(int i=0;i<3;i++) {
             try {
-                walletResponse = restTemplate.postForEntity(walletDepositUrl, request, DepositWalletResponse.class).getBody();
-                if(walletResponse.getTrackingStatus().equals(TransactionStatus.SUCCESS)){
+                ResponseEntity<DepositWalletResponse> walletResponse;
+                walletResponse=restTemplate.exchange(walletDepositUrl, HttpMethod.POST, request, DepositWalletResponse.class);
+
+                if(walletResponse.getBody().getStatus().equals(TransactionStatus.SUCCESS)){
                     TransactionEntity trans=  transactionService.findByTrackingId(depositWalletRequest.getTrackingId());
                     trans.setStatus(TransactionStatus.SUCCESS);
                     transactionService.update(trans);

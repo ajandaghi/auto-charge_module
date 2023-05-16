@@ -1,15 +1,10 @@
 package ir.mapsa.autochargemodule.exterenalservices;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import ir.mapsa.autochargemodule.externalservices.BalanceRequest;
-import ir.mapsa.autochargemodule.externalservices.DirectDeposit;
-import ir.mapsa.autochargemodule.models.entities.ProfileEntity;
-import ir.mapsa.autochargemodule.repositories.ProfileRepository;
-import ir.mapsa.autochargemodule.services.AbstractService;
+import ir.mapsa.autochargemodule.externalservices.DirectDebit;
 import ir.mapsa.autochargemodule.services.ParserJwt;
 import ir.mapsa.autochargemodule.services.ProfileService;
-import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,8 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.mockito.Mockito.when;
 
 
 @SpringBootTest
@@ -33,7 +26,7 @@ public class BalanceInquiryTest {
     private ProfileService profileService;
 
     @Mock
-    private DirectDeposit directDeposit;
+    private DirectDebit directDeposit;
     @Mock
     private BalanceRequest balanceRequest;
 

@@ -9,5 +9,5 @@ import org.springframework.stereotype.Service;
 @Setter
 @Service
 public class DepositWalletResponse {
-    private TransactionStatus trackingStatus;
+    private TransactionStatus status;
 }
