@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DirectRequest {
+    private String token;
     private String accountNumber;
     private Long amount;
 }

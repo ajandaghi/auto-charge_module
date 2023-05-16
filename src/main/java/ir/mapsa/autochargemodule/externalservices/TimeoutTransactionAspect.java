@@ -5,6 +5,7 @@ import ir.mapsa.autochargemodule.services.TransactionService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -39,6 +40,9 @@ public class TimeoutTransactionAspect {
     @Autowired
     TransactionConverter transactionConverter;
 
+    @Autowired
+    DepositWalletService depositWalletService;
+
 
 
     @AfterThrowing(value = "execution(* ir.mapsa.autochargemodule.externalservices.DepositWalletService.deposit(..))", throwing = "exception")
@@ -49,8 +53,12 @@ public class TimeoutTransactionAspect {
 //        if (requestAttributes instanceof ServletRequestAttributes) {
 //            HttpServletResponse response = ((ServletRequestAttributes) requestAttributes).getResponse();
 //        }
-
+        Signature signature=jp.getSignature();
+        DepositWalletRequest[] objects=(DepositWalletRequest[])jp.getArgs();
+        depositWalletService.retryDeposit(objects[0]);
 
     }
+
+
 
 }

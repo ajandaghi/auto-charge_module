@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DirectResponse {
-    private String status;
+    private String message;
 }

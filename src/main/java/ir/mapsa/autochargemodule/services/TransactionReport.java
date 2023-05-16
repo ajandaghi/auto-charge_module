@@ -19,8 +19,7 @@ import java.util.List;
 
 @Service
 public class TransactionReport {
-    @Autowired
-    private TransactionService transactionService;
+
 
     @Autowired
     private TransactionRepository transactionRepository;

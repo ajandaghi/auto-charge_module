@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -24,10 +25,10 @@ public class BalanceInquiry {
     private String balanceInquiryUrl;
 
     @Autowired
-    private ProfileService profileService;
+    ProfileService profileService;
 
     @Autowired
-    private DirectDeposit directDeposit;
+    DirectDeposit directDeposit;
 
 
 
@@ -36,9 +37,11 @@ public class BalanceInquiry {
     public void checkBalance(BalanceRequest balanceRequest) throws Exception {
         String user = ParserJwt.getAllFromToken(balanceRequest.getToken()).getSub();
         Long minimumBalance = profileService.findById(user).get().getMinimumBalance();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization",balanceRequest.getToken());
 
 
-        HttpEntity<BalanceRequest> request = new HttpEntity<>(balanceRequest);
+        HttpEntity<BalanceRequest> request = new HttpEntity<>(balanceRequest,headers);
         //ResponseEntity<BalanceResponse>
         try {
             Long balance = restTemplate.postForEntity(balanceInquiryUrl, request, BalanceResponse.class).getBody().getBalance();
@@ -46,7 +49,7 @@ public class BalanceInquiry {
                 throw new ServiceException("this user has not set auto charge profile");
             } else if (balance < minimumBalance) {
                 String accountNumber = ParserJwt.getAllFromToken(balanceRequest.getToken()).getAccountNumber();
-                directDeposit.directDebit(new DirectRequest(accountNumber, minimumBalance - balance));
+                directDeposit.directDebit(new DirectRequest(balanceRequest.getToken(),accountNumber, minimumBalance - balance));
             }
 
         } catch (HttpServerErrorException | HttpClientErrorException e) {

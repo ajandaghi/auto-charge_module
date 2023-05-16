@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -29,10 +30,13 @@ public class DirectDeposit
     private String bankDirectDebitUrl;
     public void directDebit(DirectRequest directRequest) throws Exception {
 
-        HttpEntity<DirectRequest> request = new HttpEntity<>(directRequest);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization",directRequest.getToken());
+        HttpEntity<DirectRequest> request = new HttpEntity<>(directRequest,headers);
+
         try {
-            if(restTemplate.postForEntity(bankDirectDebitUrl, request, DirectResponse.class).getBody().getStatus().equals("Ok")) {
-                depositWallet.deposit(new DepositWalletRequest());
+            if(restTemplate.postForEntity(bankDirectDebitUrl, request, DirectResponse.class).getBody().getMessage().equals("SUCCESS")) {
+                depositWallet.deposit(new DepositWalletRequest(TrackingIdGenerator.generateID(),directRequest.getToken(), directRequest.getAmount()));
             }
 
 
