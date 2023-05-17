@@ -17,7 +17,7 @@ public class MessageConsumer implements MessageListener
 {
 
     @Autowired
-    private BalanceInquiry balanceInquiry;
+    private AutoChargeService autoChargeService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -26,7 +26,7 @@ public class MessageConsumer implements MessageListener
    @RabbitListener(queues = MessagingConfig.QUEUE)
     public void consumeMessageFromQueue(Messages message)  {
        System.out.println(message);
-       balanceInquiry.checkDealType(message);
+       autoChargeService.checkDealType(message);
 
     }
 

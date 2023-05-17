@@ -35,18 +35,18 @@ public class TimeoutTransactionAspect {
 
 
     @Autowired
-    private DepositWalletService depositWalletService;
+    private AutoChargeService autoChargeService;
 
 
 
-    @AfterThrowing(value = "execution(* ir.mapsa.autochargemodule.externalservices.DepositImpl.deposit(..))", throwing = "exception")
+    @AfterThrowing(value = "execution(* ir.mapsa.autochargemodule.externalservices.AutoChargeService.depositToWallet(..))", throwing = "exception")
 
     public void checkTimedOutTransactions(JoinPoint jp, Exception exception) throws Exception {
 
 
         Signature signature=jp.getSignature();
         DepositWalletRequest[] objects=(DepositWalletRequest[])jp.getArgs();
-        depositWalletService.retryDeposit(objects[0]);
+        autoChargeService.retryDeposit(objects[0]);
 
     }
 
