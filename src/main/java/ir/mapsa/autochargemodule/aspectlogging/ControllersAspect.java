@@ -10,7 +10,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -29,14 +31,18 @@ public class ControllersAspect {
     @Autowired
     LogModelRepository logModelRepository;
 
-//    @Before("within(ir.mapsa.autochargemodule.controllers.AbstractController+ )")
-//    public void before() {
-//        RequestContextHolder.getRequestAttributes().
-//        log.info("request coming from " + request.getServerName() + " AND iP is => " + request.getLocalAddr() + " AND CALL URL =>  " + request.getRequestURI());
-//
-//
-//    }
+    @Before("within(ir.mapsa.autochargemodule.controllers.AbstractController+ )")
+    public void before() {
+                RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request=null;
+        if (requestAttributes instanceof ServletRequestAttributes) {
+             request = ((ServletRequestAttributes) requestAttributes).getRequest();
+        }
 
+        log.info("request coming from " + request.getServerName() + " AND iP is => " + request.getLocalAddr() + " AND CALL URL =>  " + request.getRequestURI());
+
+
+    }
 
     @Around("within(ir.mapsa.autochargemodule.controllers.AbstractController+ )")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {

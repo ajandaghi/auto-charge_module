@@ -20,9 +20,7 @@ public class AutoChargeModuleApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AutoChargeModuleApplication.class, args);
-        ProfileEntity profile=new ProfileEntity();
-        profile.setUser("arerzooeeo");
-        profile.setMinimumBalance(2000000L);
+
 
     }
 

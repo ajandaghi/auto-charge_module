@@ -9,7 +9,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-@Service
 @AllArgsConstructor
 @ToString
 public class Report

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 @PropertySource("classpath:requestedURL.properties")
-@FeignClient(name = "authentication",url = "192.168.43.12:8081")
+@FeignClient(name = "authentication",url = "192.168.200.166:8081")
 
 public interface UserAuthorization {
     @GetMapping("/api/token/is-valid")

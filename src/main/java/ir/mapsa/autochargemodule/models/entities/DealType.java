@@ -1,6 +1,6 @@
 package ir.mapsa.autochargemodule.models.entities;
 
-public enum TransactionType {
+public enum DealType {
     WITHDRAW,
     DEPOSIT;
 }

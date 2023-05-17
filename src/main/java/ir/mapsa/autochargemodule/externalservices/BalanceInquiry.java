@@ -1,6 +1,7 @@
 package ir.mapsa.autochargemodule.externalservices;
 
 import ir.mapsa.autochargemodule.exceptions.ServiceException;
+import ir.mapsa.autochargemodule.models.entities.DealType;
 import ir.mapsa.autochargemodule.services.ParserJwt;
 import ir.mapsa.autochargemodule.services.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,40 +25,51 @@ public class BalanceInquiry {
     private String balanceInquiryUrl;
 
     @Autowired
+    private BalanceImpl balanceImpl;
+
+    @Autowired
     ProfileService profileService;
 
     @Autowired
-    DirectDebit directDeposit;
+    ParserJwt parserJwt;
+
+    @Autowired
+     private DirectDebit directDebit;
 
 
 
-    private final RestTemplate restTemplate=new RestTemplate();
+    public void checkBalance(BalanceRequest balanceRequest) {
+       // System.out.println("true");
+        Long balance= balanceImpl.getBalance(balanceRequest.getToken()).getBalance();
+        //System.out.println(balance);
 
-    public void checkBalance(BalanceRequest balanceRequest) throws Exception {
-        String user = ParserJwt.getAllFromToken(balanceRequest.getToken()).getSub();
-        Long minimumBalance = profileService.findById(user).get().getMinimumBalance();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization",balanceRequest.getToken());
+        String user=parserJwt.getAllFromToken(balanceRequest.getToken()).getSub();
+        String accountNumber=parserJwt.getAllFromToken(balanceRequest.getToken()).getAccountNumber();
 
 
-        HttpEntity<BalanceRequest> request = new HttpEntity<>(balanceRequest,headers);
-        //ResponseEntity<BalanceResponse>
-        try {
-            ResponseEntity<BalanceResponse> balanceResponse;
-            balanceResponse= restTemplate.exchange(balanceInquiryUrl, HttpMethod.POST, request, BalanceResponse.class);
-            Long balance=balanceResponse.getBody().getBalance();
-             if (profileService.findById(user).isEmpty()) {
-                throw new ServiceException("this user has not set auto charge profile");
-            } else if (balance < minimumBalance) {
-                String accountNumber = ParserJwt.getAllFromToken(balanceRequest.getToken()).getAccountNumber();
-                directDeposit.directDebit(new DirectRequest(balanceResponse.getHeaders().get("Authorization").get(0),accountNumber, minimumBalance - balance));
+        if(profileService.findById(user).isEmpty()){
+            System.out.println("user does not set minimum balance");
+        } else{
+            Long minimumBalance=profileService.findById(user).get().getMinimumBalance();
+            if(minimumBalance>balance) {
+                directDebit.directDebit( new DirectRequest(balanceRequest.getToken(), accountNumber, minimumBalance - balance));
             }
-
-        } catch (HttpServerErrorException | HttpClientErrorException e) {
-            throw new ServiceException("cannot get response from wallet", e, e.getStatusCode().toString());
-
         }
+
+
+
     }
 
-
+    public void checkDealType(Messages message)  {
+        try {
+            String token = message.getToken();
+            DealType type = message.getDealType();
+            if (type.equals(DealType.WITHDRAW)) {
+                checkBalance(new BalanceRequest(token));
+            }
+        } catch (Exception e) {
+            System.out.println("Not");        }
+    }
 }
+
+

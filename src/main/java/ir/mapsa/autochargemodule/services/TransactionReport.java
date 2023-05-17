@@ -24,8 +24,10 @@ public class TransactionReport {
     @Autowired
     private TransactionRepository transactionRepository;
 
+
     @Autowired
-    private Report report;
+    private ParserJwt parserJwt;
+
 
     @Autowired
     private UserAuthorizer userAuthorizer;
@@ -39,11 +41,11 @@ public class TransactionReport {
             request = ((ServletRequestAttributes) requestAttributes).getRequest();
             token=request.getHeader("Authorization");
         }
-
-            if (ParserJwt.getAllFromToken(token).getRole().equals("ROLE_USER")) {
-                System.out.println("true");
-                return transactionRepository.findByTransDateAfterAndTransDateBeforeAndUser(report.getFromDate(), report.getToDate(), ParserJwt.getAllFromToken(token).getSub());// ParserJwt.getAllFromToken(report.getToken()).getSub();
-            } else if (ParserJwt.getAllFromToken(token).getRole().equals("ROLE_ADMIN")) {
+      //  System.out.println(token);
+            if (parserJwt.getAllFromToken(token).getRole().equals("ROLE_USER")) {
+             //   System.out.println("true");
+                return transactionRepository.findByTransDateAfterAndTransDateBeforeAndUser(report.getFromDate(), report.getToDate(), parserJwt.getAllFromToken(token).getSub());// ParserJwt.getAllFromToken(report.getToken()).getSub();
+            } else if (parserJwt.getAllFromToken(token).getRole().equals("ROLE_ADMIN")) {
                 return transactionRepository.findByTransDateAfterAndTransDateBeforeAndUser(report.getFromDate(), report.getToDate(), report.getUser());//, report.getUser());
             }
 

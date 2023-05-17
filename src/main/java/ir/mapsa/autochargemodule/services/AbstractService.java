@@ -26,7 +26,7 @@ public abstract class AbstractService<R extends BaseRepository<E, String>, E> {
         repository.deleteById(user);
     }
 
-    public Optional<E> findById(String user) throws Exception {
+    public Optional<E> findById(String user)  {
         return repository.findById(user);
     }
 

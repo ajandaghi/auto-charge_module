@@ -1,35 +1,54 @@
 package ir.mapsa.autochargemodule.externalservices;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import ir.mapsa.autochargemodule.exceptions.ServiceException;
-import ir.mapsa.autochargemodule.models.entities.TransactionType;
-import ir.mapsa.autochargemodule.repositories.ProfileRepository;
-import ir.mapsa.autochargemodule.services.ParserJwt;
-import org.json.JSONException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import ir.mapsa.autochargemodule.configuration.MessagingConfig;
+import ir.mapsa.autochargemodule.models.entities.DealType;
+import org.springframework.amqp.core.AcknowledgeMode;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageListener;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class MessageConsumer
-{
-    @Autowired
-    private RequestWalletId requestWalletId;
+import java.util.List;
 
-    @Autowired
-    private ProfileRepository profileRepository;
+@Service
+public class MessageConsumer implements MessageListener
+{
 
     @Autowired
     private BalanceInquiry balanceInquiry;
 
     @Autowired
-    private UserAuthorizer userAuthorizer;
+    private ObjectMapper objectMapper;
 
 
-   // @RabbitListener(queues = MessagingConfig.QUEUE)
-    public void consumeMessageFromQueue(Messages message) throws Exception {
-        if(message.getDealType().equals(TransactionType.WITHDRAW)){
-                balanceInquiry.checkBalance(new BalanceRequest(message.getToken()));
-        }
+   @RabbitListener(queues = MessagingConfig.QUEUE)
+    public void consumeMessageFromQueue(Messages message)  {
+       System.out.println(message);
+       balanceInquiry.checkDealType(message);
 
+    }
+
+
+
+    @Override
+    public void onMessage(Message message) {
+
+    }
+
+    @Override
+    public void containerAckMode(AcknowledgeMode mode) {
+        MessageListener.super.containerAckMode(mode);
+    }
+
+    @Override
+    public boolean isAsyncReplies() {
+        return MessageListener.super.isAsyncReplies();
+    }
+
+    @Override
+    public void onMessageBatch(List<Message> messages) {
+        MessageListener.super.onMessageBatch(messages);
     }
 }

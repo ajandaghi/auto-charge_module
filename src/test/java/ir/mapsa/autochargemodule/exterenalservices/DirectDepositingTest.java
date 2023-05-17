@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class DirectDepositTest {
+public class DirectDepositingTest {
     @Mock
     private DepositWalletService depositWalletService;
     @InjectMocks

@@ -11,24 +11,18 @@ import ir.mapsa.autochargemodule.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.RestTemplate;
 
 @PropertySource("classpath:requestedURL.properties")
 @Service
 public class DepositWalletService {
-    private final RestTemplate restTemplate = new RestTemplate();
 
 
+@Autowired
+private ParserJwt parserJwt;
 
-    @Autowired
-    private DepositWalletResponse walletResponse;
 
     @Autowired
     private TransactionService transactionService;
@@ -36,23 +30,23 @@ public class DepositWalletService {
     @Autowired
     private TransactionConverter transactionConverter;
 
+    @Autowired
+    private DepositImpl depositWallet;
+
     @Value("${wallet.deposit.url}")
     private String walletDepositUrl;
 
-    public void deposit(DepositWalletRequest depositWalletRequest) throws Exception {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization",depositWalletRequest.getToken());
-        HttpEntity<DepositWalletRequest> request = new HttpEntity<>(depositWalletRequest,headers);
+    public void depositToWallet(DepositWalletRequest depositWalletRequest) throws Exception {
+
 
         TransactionDto transactionDto=TransactionDto.builder()
                 .amount(depositWalletRequest.getAmount())
                 .trackingId(TrackingIdGenerator.generateID()).build();
-        transactionDto.setUser(ParserJwt.getAllFromToken(depositWalletRequest.getToken()).getSub());
+        transactionDto.setUser(parserJwt.getAllFromToken(depositWalletRequest.getToken()).getSub());
 
         try{
-            ResponseEntity<DepositWalletResponse> walletResponse;
-            walletResponse=restTemplate.exchange(walletDepositUrl, HttpMethod.POST, request, DepositWalletResponse.class);
-            transactionDto.setStatus(walletResponse.getBody().getStatus());
+           DepositWalletResponse walletResponse=depositWallet.depositToWallet(depositWalletRequest.getToken(),depositWalletRequest);
+            transactionDto.setStatus(walletResponse.getStatus());
 
         } catch (HttpServerErrorException | HttpClientErrorException e) {
 
@@ -67,15 +61,12 @@ public class DepositWalletService {
     }
 
     public void retryDeposit(DepositWalletRequest depositWalletRequest) throws Exception{
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization",depositWalletRequest.getToken());
-        HttpEntity<DepositWalletRequest> request = new HttpEntity<>(depositWalletRequest,headers);
+
         for(int i=0;i<3;i++) {
             try {
-                ResponseEntity<DepositWalletResponse> walletResponse;
-                walletResponse=restTemplate.exchange(walletDepositUrl, HttpMethod.POST, request, DepositWalletResponse.class);
+                DepositWalletResponse walletResponse=depositWallet.depositToWallet(depositWalletRequest.getToken(),depositWalletRequest);
 
-                if(walletResponse.getBody().getStatus().equals(TransactionStatus.SUCCESS)){
+                if(walletResponse.getStatus().equals(TransactionStatus.SUCCESS)){
                     TransactionEntity trans=  transactionService.findByTrackingId(depositWalletRequest.getTrackingId());
                     trans.setStatus(TransactionStatus.SUCCESS);
                     transactionService.update(trans);
@@ -84,7 +75,7 @@ public class DepositWalletService {
                 }
 
             } catch (HttpServerErrorException | HttpClientErrorException e) {
-                throw new ServiceException("cannot get response from wallet", e, e.getStatusCode().toString());
+                throw new ServiceException("cannot get response from wallet/TimeOut", e, e.getStatusCode().toString());
             }
         }
     }

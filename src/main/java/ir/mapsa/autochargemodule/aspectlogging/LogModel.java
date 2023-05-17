@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Data
-@Document(collection = "wallet")
+@Document(collection = "auto-charge")
 public class LogModel {
 
     @MongoId

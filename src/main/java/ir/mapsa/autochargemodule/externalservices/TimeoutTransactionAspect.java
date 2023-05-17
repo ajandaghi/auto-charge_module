@@ -30,8 +30,7 @@ public class TimeoutTransactionAspect {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
-    DepositWalletResponse restResponse;
-
+   private DepositWalletResponse restResponse;
 
 
 
@@ -40,14 +39,11 @@ public class TimeoutTransactionAspect {
 
 
 
-    @AfterThrowing(value = "execution(* ir.mapsa.autochargemodule.externalservices.DepositWalletService.deposit(..))", throwing = "exception")
+    @AfterThrowing(value = "execution(* ir.mapsa.autochargemodule.externalservices.DepositImpl.deposit(..))", throwing = "exception")
 
     public void checkTimedOutTransactions(JoinPoint jp, Exception exception) throws Exception {
 
-//        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-//        if (requestAttributes instanceof ServletRequestAttributes) {
-//            HttpServletResponse response = ((ServletRequestAttributes) requestAttributes).getResponse();
-//        }
+
         Signature signature=jp.getSignature();
         DepositWalletRequest[] objects=(DepositWalletRequest[])jp.getArgs();
         depositWalletService.retryDeposit(objects[0]);

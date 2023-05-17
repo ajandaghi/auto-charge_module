@@ -17,7 +17,7 @@ public class MessagingConfig {
     @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-        connectionFactory.setAddresses("192.168.1.104");
+        connectionFactory.setAddresses("192.168.200.166");
         connectionFactory.setPort(15672);
         connectionFactory.setUsername("wallet");
         connectionFactory.setPassword("wallet");

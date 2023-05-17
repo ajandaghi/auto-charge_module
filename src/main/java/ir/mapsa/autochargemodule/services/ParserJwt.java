@@ -15,26 +15,36 @@ import java.util.Date;
 
 @Service
 public class ParserJwt {
+
+
     @Autowired
-    TransactionReport transactionReport;
+    private static ObjectMapper objectMapper;
 
+    public  JwtPayloadObj getAllFromToken(String token)  {
+       // System.out.println(token);
 
-    public static JwtPayloadObj getAllFromToken(String token) throws JsonProcessingException {
+        //System.err.println("=======================");
+
+        if (token.startsWith("Bearer")){
+            token = token.substring(8);
+        }
         Base64.Decoder decoder = Base64.getUrlDecoder();
+
         String[] chunks = token.split("\\.");
 
         String header = new String(decoder.decode(chunks[0]));
         String payload = new String(decoder.decode(chunks[1]));
-        JwtPayloadObj jwtObj = new ObjectMapper().readValue(payload, JwtPayloadObj.class);
 
-        return jwtObj;
+
+        try {
+            return objectMapper.readValue(payload , JwtPayloadObj.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    public static void main(String[] args) throws JsonProcessingException, ServiceException, ParseException {
-        System.out.println(getAllFromToken(
-                "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhcmVyem9vZWVvIiwicm9sZSI6IlJPTEVfVVNFUiIsImFjY291bnROdW1iZXIiOiI2MzYyMTQxMDU2NzIzMDY1NTgiLCJleHAiOjE2ODQxNDQyNjYsImlhdCI6MTY4NDE0MDY2NiwiY2FyZE51bWJlciI6IjYzNjIxNDEwNTY3MjMwNjgiLCJqdGkiOiI0ZmJkYmI3NjU5ZmY0NTZmOTc5OGNjNmY5MTJmMGYzOCJ9.QqbvACVepYaaevxlDUrqaOwKVoEJcBu2omVh26aoFy4SJqwqZ7fVrx7dWcy7_naaocsMkFrrhMKxncQmDpOG4g"));
 
-    }
 
   //  @PostConstruct
     public void test() throws ParseException, ServiceException, JsonProcessingException {
