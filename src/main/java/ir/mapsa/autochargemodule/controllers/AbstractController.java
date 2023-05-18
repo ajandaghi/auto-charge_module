@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public abstract class AbstractController<E, D> {
 
     @Autowired
-    private AbstractService<? extends JpaRepository<E, String>, E> service;
+    private AbstractService<? extends JpaRepository<E, Long>, E> service;
 
     @Autowired
     private BaseConverter<E, D> converter;
@@ -36,15 +36,15 @@ public abstract class AbstractController<E, D> {
         service.update(converter.convertDto(d));
     }
 
-    @DeleteMapping("/{walletId}")
+    @DeleteMapping("/{id}")
     @Transactional
-    public void deleteById(@PathVariable("walletId") String walletId) throws Exception {
-        service.deleteById(walletId);
+    public void deleteById(@PathVariable("id") Long id) throws Exception {
+        service.deleteById(id);
     }
 
-    @GetMapping("/{walletId}")
-    public D findById(@PathVariable("walletId") String walletId) throws Exception {
-        return converter.convertEntity(service.findById(walletId).get());
+    @GetMapping("/{id}")
+    public D findById(@PathVariable("id") Long id) throws Exception {
+        return converter.convertEntity(service.findById(id).get());
     }
 
     @GetMapping()

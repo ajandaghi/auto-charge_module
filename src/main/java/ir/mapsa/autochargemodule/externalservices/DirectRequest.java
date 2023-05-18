@@ -11,8 +11,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class DirectRequest {
+    private String walletId;
     private String token;
     private String sourceAccountNumber;
-    private final String DestinationAccountNumber="1000000000";
+    private String destinationAccountNumber;
     private Long amount;
 }

@@ -18,7 +18,7 @@ public class ParserJwt {
 
 
     @Autowired
-    private static ObjectMapper objectMapper;
+    private  ObjectMapper objectMapper;
 
     public  JwtPayloadObj getAllFromToken(String token)  {
        // System.out.println(token);

@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class DepositWalletRequest {
+   private String walletId;
    private String trackingId;
    private String token;  //?
    private Long amount;

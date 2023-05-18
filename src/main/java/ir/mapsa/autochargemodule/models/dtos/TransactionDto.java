@@ -13,6 +13,10 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransactionDto extends AbstractDto{
+    private String walletId;
+
+    private  String user;
+
     private String trackingId;
 
     private Long amount;

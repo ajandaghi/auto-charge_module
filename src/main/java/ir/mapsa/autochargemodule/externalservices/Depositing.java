@@ -5,11 +5,11 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.*;
 
 @PropertySource("classpath:requestedURL.properties")
-@FeignClient(name = "depositing",url = "192.168.200.166:8080" )
+@FeignClient(name = "depositing",url = "${wallet.host.ip}" )
 
 
 public interface Depositing {
 
-    @PostMapping ( "/wallet/deposit")
+    @PostMapping ( "${wallet.deposit.path}")
     DepositWalletResponse deposit(@RequestHeader(name="Authorization") String token, @RequestBody DepositWalletRequest depositWalletRequest);
 }

@@ -15,7 +15,7 @@ import org.hibernate.envers.Audited;
 @NoArgsConstructor
 public class ProfileEntity extends AbstractEntity {
 
-
+    private String walletId;
     private Long minimumBalance;
 
 

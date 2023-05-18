@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
         @Autowired
         private Direct directBank;
 
-        @PostMapping("/bank/account")
-        public DirectResponse directDebit(@RequestHeader(name = "Authorization") String token, @RequestBody DirectRequest directRequest) {
+        @PostMapping("/auto-charge/bank/direct")
+        public DirectResponse directDebit(@RequestHeader(name = "Authorization") String token, DirectRequest directRequest) {
             return directBank.directDebitBank(token,directRequest);
         }
     }

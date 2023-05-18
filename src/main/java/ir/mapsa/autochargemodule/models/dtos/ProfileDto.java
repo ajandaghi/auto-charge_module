@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProfileDto extends AbstractDto{
 
+    private  String walletId;
     private Long minimumBalance;
 
 

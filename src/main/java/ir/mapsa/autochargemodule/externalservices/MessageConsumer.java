@@ -25,7 +25,6 @@ public class MessageConsumer implements MessageListener
 
    @RabbitListener(queues = MessagingConfig.QUEUE)
     public void consumeMessageFromQueue(Messages message)  {
-       System.out.println(message);
        autoChargeService.checkDealType(message);
 
     }

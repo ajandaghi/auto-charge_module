@@ -14,7 +14,7 @@ import java.util.Date;
 @EqualsAndHashCode
 public class AbstractDto {
 
-    private String user;
+    private Long id;
 
 
     private Integer version;

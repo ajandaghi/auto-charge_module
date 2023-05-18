@@ -18,6 +18,10 @@ public class TransactionEntity extends AbstractEntity{
     @Column(unique = true)
     private String trackingId;
 
+    private String walletId;
+
+    private String user;
+
     private Long amount;
 
     @Enumerated(value = EnumType.STRING)

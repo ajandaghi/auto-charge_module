@@ -10,5 +10,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class BalanceRequest {
+    private String walletId;
     private String token;
 }

@@ -44,9 +44,9 @@ public class TransactionReport {
       //  System.out.println(token);
             if (parserJwt.getAllFromToken(token).getRole().equals("ROLE_USER")) {
              //   System.out.println("true");
-                return transactionRepository.findByTransDateAfterAndTransDateBeforeAndUser(report.getFromDate(), report.getToDate(), parserJwt.getAllFromToken(token).getSub());// ParserJwt.getAllFromToken(report.getToken()).getSub();
+                return transactionRepository.findByTransDateAfterAndTransDateBeforeAndWalletId(report.getFromDate(), report.getToDate(), parserJwt.getAllFromToken(token).getSub());// ParserJwt.getAllFromToken(report.getToken()).getSub();
             } else if (parserJwt.getAllFromToken(token).getRole().equals("ROLE_ADMIN")) {
-                return transactionRepository.findByTransDateAfterAndTransDateBeforeAndUser(report.getFromDate(), report.getToDate(), report.getUser());//, report.getUser());
+                return transactionRepository.findByTransDateAfterAndTransDateBeforeAndWalletId(report.getFromDate(), report.getToDate(), report.getUser());//, report.getUser());
             }
 
             return null;

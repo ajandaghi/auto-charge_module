@@ -27,11 +27,9 @@ import java.lang.reflect.Method;
 @Aspect
 public class TimeoutTransactionAspect {
 
-    private final RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
    private DepositWalletResponse restResponse;
-
 
 
     @Autowired

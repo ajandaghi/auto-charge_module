@@ -15,6 +15,7 @@ public class Report
 {
     private Date fromDate;
     private Date toDate;
+    private String walletId;
     private String user;
    // private String token;
 }

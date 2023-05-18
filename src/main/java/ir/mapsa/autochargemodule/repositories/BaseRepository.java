@@ -1,5 +1,6 @@
 package ir.mapsa.autochargemodule.repositories;
 
+import ir.mapsa.autochargemodule.models.entities.ProfileEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 

@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
+import java.net.http.HttpResponse;
+
 @Service
 public class AutoChargeService {
 
@@ -41,19 +43,17 @@ public class AutoChargeService {
 
     public void checkBalance(BalanceRequest balanceRequest) {
         // System.out.println("true");
-        Long balance= balanceImpl.getBalance(balanceRequest.getToken()).getBalance();
+        BalanceResponse balanceResponse = balanceImpl.getBalance(balanceRequest.getToken(),balanceRequest);
         //System.out.println(balance);
-
-        String user=parserJwt.getAllFromToken(balanceRequest.getToken()).getSub();
-        String accountNumber=parserJwt.getAllFromToken(balanceRequest.getToken()).getAccountNumber();
-
-
-        if(profileService.findById(user).isEmpty()){
+        Long balance=balanceResponse.getBalance();
+        String accountNumber = parserJwt.getAllFromToken(balanceRequest.getToken()).getAccountNumber().substring(0, 10);
+       // System.out.println(balance);
+        if (profileService.findByWalletId(balanceRequest.getWalletId()) == null) {
             System.out.println("user does not set minimum balance");
-        } else{
-            Long minimumBalance=profileService.findById(user).get().getMinimumBalance();
-            if(minimumBalance>balance) {
-                directDebit( new DirectRequest(balanceRequest.getToken(), accountNumber, minimumBalance - balance));
+        } else {
+            Long minimumBalance = profileService.findByWalletId(balanceRequest.getWalletId()).getMinimumBalance();
+            if (minimumBalance > balance) {
+                directDebit(new DirectRequest(balanceRequest.getWalletId(),balanceRequest.getToken(), accountNumber, "1234567890", minimumBalance - balance));
             }
         }
 
@@ -63,12 +63,12 @@ public class AutoChargeService {
 
 
         DirectResponse response = directImpl.directDebit(directRequest.getToken(), directRequest);
-        if (response.getMessage().equals("ACCEPTED")) {
-            try {
-                depositToWallet( new DepositWalletRequest(TrackingIdGenerator.generateID(), directRequest.getToken(), directRequest.getAmount()));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+       // System.out.println(directRequest.getToken());
+
+        if (response.getMessage().equals("success transaction")) {
+
+            depositToWallet(new DepositWalletRequest(directRequest.getWalletId(),TrackingIdGenerator.generateID(), directRequest.getToken(), directRequest.getAmount()));
+
         }
 
 
@@ -79,52 +79,43 @@ public class AutoChargeService {
         String token = message.getToken();
         DealType type = message.getDealType();
         if (type.equals(DealType.WITHDRAW)) {
-            checkBalance(new BalanceRequest(token));
+            checkBalance(new BalanceRequest(message.getWalletId(), token));
         }
 
     }
 
-    public void depositToWallet(DepositWalletRequest depositWalletRequest) throws Exception {
+    public void depositToWallet(DepositWalletRequest depositWalletRequest) {
 
 
-        TransactionDto transactionDto=TransactionDto.builder()
+        TransactionDto transactionDto = TransactionDto.builder()
                 .amount(depositWalletRequest.getAmount())
+                .user(parserJwt.getAllFromToken(depositWalletRequest.getToken()).getSub())
                 .trackingId(TrackingIdGenerator.generateID()).build();
-        transactionDto.setUser(parserJwt.getAllFromToken(depositWalletRequest.getToken()).getSub());
+        transactionDto.setWalletId(depositWalletRequest.getWalletId());
 
-        try{
-            DepositWalletResponse walletResponse=depositImpl.depositToWallet(depositWalletRequest.getToken(),depositWalletRequest);
-            transactionDto.setStatus(walletResponse.getStatus());
 
-        } catch (HttpServerErrorException | HttpClientErrorException e) {
+        DepositWalletResponse walletResponse = depositImpl.depositToWallet(depositWalletRequest.getToken(), depositWalletRequest);
+        transactionDto.setStatus(walletResponse.getStatus());
 
-            transactionDto.setStatus(TransactionStatus.TIMEOUT);
+        transactionService.add(transactionConverter.convertDto(transactionDto));
 
-            throw new ServiceException("cannot get response from wallet",e,e.getStatusCode().toString());
-        } finally {
-            transactionService.add(transactionConverter.convertDto(transactionDto));
-
-        }
 
     }
 
-    public void retryDeposit(DepositWalletRequest depositWalletRequest) throws Exception{
+    public void retryDeposit(DepositWalletRequest depositWalletRequest) throws Exception {
 
-        for(int i=0;i<3;i++) {
-            try {
-                DepositWalletResponse walletResponse=depositImpl.depositToWallet(depositWalletRequest.getToken(),depositWalletRequest);
+        for (int i = 0; i < 3; i++) {
+            DepositWalletResponse walletResponse = depositImpl.depositToWallet(depositWalletRequest.getToken(), depositWalletRequest);
 
-                if(walletResponse.getStatus().equals(TransactionStatus.SUCCESS)){
-                    TransactionEntity trans=  transactionService.findByTrackingId(depositWalletRequest.getTrackingId());
-                    trans.setStatus(TransactionStatus.SUCCESS);
-                    transactionService.update(trans);
-                    break;
+            if (walletResponse.getStatus().equals(TransactionStatus.SUCCESS)) {
+                TransactionEntity trans = transactionService.findByTrackingId(depositWalletRequest.getTrackingId());
+                trans.setStatus(TransactionStatus.SUCCESS);
+                transactionService.update(trans);
+                break;
 
-                }
-
-            } catch (HttpServerErrorException | HttpClientErrorException e) {
-                throw new ServiceException("cannot get response from wallet/TimeOut", e, e.getStatusCode().toString());
             }
+
+
         }
     }
 }

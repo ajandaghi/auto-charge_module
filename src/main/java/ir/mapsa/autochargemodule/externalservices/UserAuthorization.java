@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @PropertySource("classpath:requestedURL.properties")
-@FeignClient(name = "authentication",url = "192.168.200.166:8081")
+@FeignClient(name = "authentication",url = "${oauth.host.ip}")
 
 public interface UserAuthorization {
     @PostMapping("/api/token/is-valid")

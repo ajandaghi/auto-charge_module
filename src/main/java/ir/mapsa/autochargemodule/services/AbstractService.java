@@ -4,16 +4,17 @@ package ir.mapsa.autochargemodule.services;
 import ir.mapsa.autochargemodule.repositories.BaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
-
-public abstract class AbstractService<R extends BaseRepository<E, String>, E> {
+public abstract class AbstractService<R extends BaseRepository<E, Long>, E> {
     @Autowired
     protected R repository;
 
 
-    public void add(E e) throws Exception {
+    public void add(E e)  {
         repository.save(e);
     }
 
@@ -22,12 +23,12 @@ public abstract class AbstractService<R extends BaseRepository<E, String>, E> {
     }
 
 
-    public void deleteById(String user) throws Exception {
-        repository.deleteById(user);
+    public void deleteById(Long id) throws Exception {
+        repository.deleteById(id);
     }
 
-    public Optional<E> findById(String user)  {
-        return repository.findById(user);
+    public Optional<E> findById(Long id)  {
+        return repository.findById(id);
     }
 
     public List<E> getAll() throws Exception {
@@ -37,4 +38,5 @@ public abstract class AbstractService<R extends BaseRepository<E, String>, E> {
     public List<E> findByExample(E e) {
         return repository.findAll(Example.of(e));
     }
+
 }

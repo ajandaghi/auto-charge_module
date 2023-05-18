@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.*;
 
 
 @PropertySource("classpath:requestedURL.properties")
-@FeignClient(name = "directing",url = "192.168.200.166:8080" )
+@FeignClient(name = "directing",url = "${wallet.bank.ip}" )
 public interface Direct {
 
-        @PostMapping( "/bank/account")
+        @PostMapping( "${bank.directDebit.path}")
 
         DirectResponse directDebitBank(@RequestHeader(name="Authorization") String token, @RequestBody DirectRequest directRequest);
 
